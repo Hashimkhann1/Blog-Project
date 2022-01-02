@@ -4,7 +4,7 @@ const url = 'http://localhost:8001'
 
 
 export const createPost = async (post) => {
-	console.log(post);
+	// console.log(post);
 	try {
 		return await axios.post(`${url}/create` , post)
 	} catch (error) {
@@ -70,5 +70,19 @@ export const DeleteComment = async (id) => {
 		return await axios.delete(`${url}/delete/comment/${id}`)
 	} catch (error) {
 		console.log('error while deleting comment from api')
+	}
+}
+
+
+
+
+///// . fro user registertion /////.//
+
+
+export const CreateUserDB = async (CUdata) => {
+	try {
+		return await axios.post(`${url}/registir/user` , CUdata)
+	} catch (error) {
+		console.log('error while calling CreateUserDB from api' , error)
 	}
 }

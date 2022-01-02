@@ -4,7 +4,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { getpostId , updatePost } from '../../service/api';
-import {useHistory} from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 
 const useStyle = makeStyles((theme) => ({
 	container : {
@@ -54,7 +54,7 @@ const UpdateView = ({match}) => {
 	
 	
 	const classes = useStyle()
-	const history = useHistory()
+	const history = useNavigate()
 
 
 	const [UpdatePost , setUpdatePost] = useState(initialState)
@@ -77,7 +77,7 @@ const UpdateView = ({match}) => {
 
 	const updatBlog = async () => {
 		await updatePost(match.params.id , UpdatePost)
-		history.push(`/details${match.params.id}`)
+		history(`/details${match.params.id}`)
 	}
 	
 

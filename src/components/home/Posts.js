@@ -20,6 +20,7 @@ const Posts = () => {
 	}, [search])
 
 	console.log(search)
+	
 
 
 	return (

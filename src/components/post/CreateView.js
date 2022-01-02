@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect } from 'react'
 import { Box , makeStyles , FormControl, InputBase, Button, TextareaAutosize } from '@material-ui/core'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import {useHistory} from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 import { createPost  } from '../../service/api'
 import FileBase from 'react-file-base64'
 
@@ -46,37 +46,36 @@ const useStyle = makeStyles((theme) => ({
 }))
 
 
-const initialState = {
-	title:'',
-	descripition:'',
-	picture:'',
-	username:'M hashim khan',
-	categories:'All',
-	createDate: new Date()
-}
+
 
 
 const CreateView = () => {
+
+	let user = localStorage.getItem('user')
+	let userName = JSON.parse(user)
 	
-	
+	const initialState = {
+		title:'',
+		descripition:'',
+		picture:'',
+		username:userName.Name,
+		categories:'All',
+		createDate: new Date()
+	}
+
 	const classes = useStyle();
-	
+
 	const [post , setPost] = useState(initialState)
 	const [file , setFile] = useState('')
+	const [Image , setImage] = useState('')
 	// const [imageUrl , setimageUrl] = useState('')
 
-	const history = useHistory()
-
-
+	const history = useNavigate()
 
 		const getImage = async () => {
 			if(file!== ''){
 				const data = {picture:file[0].base64};
 				post.picture = data.picture
-				// setimageUrl(data.picture)
-				console.log(data.picture)
-
-				
 			}
 		}
 		
@@ -89,12 +88,22 @@ const CreateView = () => {
 		getImage()
 		await createPost(post)
 		// console.log(post);
-		history.push('/')
+		history('/')
 	}
 
+	const checkForImage = () => {
+		if(file !== ''){
+		  setImage(file[0].base64)
+		}
+	  }
+	  useEffect(() => {
+		checkForImage();
+	  }, [file])
 
-	const url = post.picture || 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80'
 
+	const url = Image || 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80'
+
+	// post.picture 
 
 	return (
 		<Box className={classes.container}>

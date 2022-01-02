@@ -2,12 +2,11 @@ import React from 'react'
 import { Box, makeStyles , Typography } from '@material-ui/core'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate , useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { getpostId , deleteBlogPost } from '../../service/api';
 import Comments from '../comment/Comments';
-
 
 
 const usestyle = makeStyles((theme) => ({
@@ -61,32 +60,54 @@ const Detailview = ({match}) => {
 	const url = 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80update.jsx'
 
 	const classes = usestyle()
-	const history = useHistory()
+	const history = useNavigate()
 
+	const params = useParams()
 
 	const [PostById , setPostById] = useState({})
 
 	useEffect(() => {
 		const postId = async () => {
-			let detaildata = await getpostId(match.params.id)
+			let detaildata = await getpostId(params.id)
 			setPostById(detaildata)
 		}
 		postId()
 	}, [])
 
 	const deleteBlog = async () => {
-		await deleteBlogPost(PostById._id)
-		history.push('/')
+		if(PostById._id !== ''){
+			await deleteBlogPost(PostById._id)
+			history('/')
+		}
+		
 	}
-	// console.log(PostById)
+
+	const [UpdateDelete , setUpdateDelete] = useState({})
+	
+	// let localData = localStorage.getItem('user')
+	// let userData = JSON.parse(localData)
+	// setUpdateDelete(userData)
+	// console.log(UpdateDelete)
+
+	const checkForUser = () => {
+		let data = localStorage.getItem('user')
+		if(data){
+		  setUpdateDelete(JSON.parse(data))
+		}
+	  }
+	  useEffect(() => {
+		checkForUser();
+	  }, [])
+
+
 	return (
 		<div>
 			<Box className={classes.container}>
 				<img src={PostById.picture || url} alt="detailimg" className={classes.image} />
-				<Box className={classes.icons}>
+				{UpdateDelete.Name === PostById.username ? <Box className={classes.icons}>
 					<Link to={`/update/${PostById._id}`}><EditIcon className={classes.icon} color='primary'/></Link>
 					<DeleteIcon onClick={() => deleteBlog()} className={classes.icon}  color='error'/>
-				</Box>
+				</Box> : null}
 				<Typography className={classes.title}>{PostById.title}</Typography>
 				<Box className={classes.autherdate}>
 					<Link to={`/?username=${PostById.username}`} className={classes.auther}>

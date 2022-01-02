@@ -1,7 +1,7 @@
 import React from 'react'
 import {AppBar , Toolbar , Typography , makeStyles} from '@material-ui/core'
-import { Link } from 'react-router-dom'
-
+import { Link , useNavigate } from 'react-router-dom'
+import { width } from '@mui/system'
 
 
 
@@ -30,25 +30,53 @@ const useStyles = makeStyles({
 		color :'#262626',
 		textTransform : 'uppercase',
 		fontFamily : 'Roboto'
+	},
+	logout : {
+		cursor : 'pointer'
+	},
+	headerNone : {
+		
+	},
+	hAnone : {
+		backgroundColor : '#66727571',
+		position : 'absolute',
+		boxShadow : 'none',
+		height : '72px',
+
 	}
 
 })
 
-const Header = () => {
+const Header = ({user}) => {
+
+
+	const hsitory = useNavigate() 
 	
 	const classes = useStyles()
 
+	const Logout = () => {
+		localStorage.removeItem('user')
+		// hsitory('/login')
+	}
+	// console.log(user)
+
 	return (
-		<div>
+		<>
+		{user && user._id ? <div>
 			<AppBar className={classes.component}>
 				<Toolbar className={classes.container}>
 					<Link to={'/'} className={classes.link}><Typography>Home</Typography></Link>
 					<Typography>About</Typography>
 					<Typography>Contact</Typography>
-					<Typography>Login</Typography>
+					<Link to={'/login'}><Typography className={classes.logout} onClick={Logout}>Logout</Typography></Link>
 				</Toolbar>
 			</AppBar>
-		</div>
+		</div> :
+			<AppBar className={classes.hAnone}>
+				<Toolbar className={classes.headerNone}></Toolbar>
+				</AppBar>}
+		</>
+		
 	)
 }
 
